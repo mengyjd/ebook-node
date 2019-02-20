@@ -1,4 +1,4 @@
-const env = require('env')
+const env = require('./env')
 
 let resUrl = ''  // 资源路径 即nginx服务器中的资源
 
