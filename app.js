@@ -211,5 +211,8 @@ function createCategoryListItem(categoryId, result) {
 }
 
 const server = app.listen(4005, () => {
-  console.log('listen success')
+  const host = server.address().address
+  const port = server.address().port
+
+  console.log('server is listening at http://%s:%s', host, port)
 })
