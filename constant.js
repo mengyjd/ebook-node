@@ -1,11 +1,22 @@
 const env = require('./env')
 
 let resUrl = ''  // 资源路径 即nginx服务器中的资源
-
+let dbHost = ''
+let dbPort = ''
+let dbUser = ''
+let dbPassword = ''
 if (env === 'dev') {
   resUrl = 'http://localhost:3001'
+  dbHost = 'localhost'
+  dbPort = '3306'
+  dbUser = 'root'
+  dbPassword = '123456'
 } else {
-  resUrl = 'http://120.77.207.213'
+  resUrl = '120.77.207.213'
+  dbHost = '120.77.207.213'
+  dbPort = '3305'
+  dbUser = 'root'
+  dbPassword = '123456'
 }
 
 const category = [
@@ -172,5 +183,9 @@ module.exports = {
   resUrl,
   category,
   categories,
-  categoryIds
+  categoryIds,
+  dbHost,
+  dbPort,
+  dbUser,
+  dbPassword
 }
