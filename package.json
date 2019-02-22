@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "dev": "cross-env NODE_ENV=development forever start app.js",
+    "start": "cross-env NODE_ENV=production forever start app.js"
   },
   "author": "梦萦几度",
   "license": "ISC",
@@ -13,5 +14,8 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "mysql": "^2.16.0"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0"
   }
 }

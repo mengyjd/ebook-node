@@ -5,7 +5,7 @@ let dbHost = ''
 let dbPort = ''
 let dbUser = ''
 let dbPassword = ''
-if (env === 'dev') {
+if (env === 'development') {
   resUrl = 'http://localhost:3001'
   dbHost = 'localhost'
   dbPort = '3306'
