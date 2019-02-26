@@ -128,10 +128,40 @@ app.get('/book/shelf', (req, res) => {
   })
 })
 
-function createRandomNumArray(num, length) {
+app.get('/book/hotSearch', (req, res) => {
+  let hotSearchList = []
+  const conn = connectDB()
+  var length = 0
+  conn.query('select * from book', (err, result) => {
+    if (!err && result) {
+      length = result.length
+      const hotSearchBookIds = createRandomNumArray(5, length)
+      hotSearchBookIds.forEach(id => {
+        let hotSearchItem = {}
+        hotSearchItem.text = result[id].title
+        hotSearchItem.searchPeopleNum = createRandomNumArray(1, 20000)[0] + 8000
+        hotSearchItem.type = 'book'
+        hotSearchItem.fileName = result[id].fileName
+        hotSearchItem.categoryText = result[id].categoryText
+        hotSearchList.push(hotSearchItem)
+      })
+      res.json({
+        hotSearchList
+      })
+    } else {
+      res.json({
+        error_code: 1,
+        msg: '数据获取失败'
+      })
+    }
+  })
+  conn.end()
+})
+
+function createRandomNumArray(num, max) {
   let arr = []
   while (arr.length < num) {
-    arr.push(Math.floor(Math.random() * length))
+    arr.push(Math.floor(Math.random() * max))
     arr = [...new Set(arr)]
   }
   return arr
@@ -160,6 +190,7 @@ function createGuessYouLike(result, length) {
   createRandomNumArray(9, length).forEach(key => {
     let book = createData(result, key)
     book.type = createRandomNumArray(1, 3)[0] + 1
+    book.result = createRandomNumArray(1, 100000)[0] + 8000
     guessYouLike.push(book)
   })
   return guessYouLike
