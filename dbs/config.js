@@ -2,7 +2,7 @@
 const constant = require('../constant')
 
 module.exports = {
-  user: 'mongodb://127.0.0.1:27017/user',
+  ebookMongo: 'mongodb://127.0.0.1:27017/ebook',
   mysql: {
     get host() {
       return constant.dbHost
