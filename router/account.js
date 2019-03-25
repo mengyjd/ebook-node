@@ -3,8 +3,7 @@ const router = express.Router()
 const UserModel = require('../dbs/modules/user')
 const passport = require('./utils/passport')
 const jwt = require('jsonwebtoken')
-
-const secret = 'myjd123' // token密钥
+const utils = require('./utils/utils')
 
 // 用户登录，验证用户信息并返回token
 router.post('/login', (req, res, next) => {
@@ -32,7 +31,7 @@ router.post('/login', (req, res, next) => {
         expiresIn: "30 days"
       }
 
-      const token = jwt.sign(payload, secret, options)
+      const token = jwt.sign(payload, utils.secret, options)
 
       return res.json({
         error_code: 0,
@@ -45,40 +44,17 @@ router.post('/login', (req, res, next) => {
 
 // 检查用户登录状态
 router.post('/check-login', async (req, res) => {
-
-  if (req.headers['authentication-token']) {
-    const token = req.headers['authentication-token'].split(' ')[1]
-
-    try {
-      const decoded = jwt.verify(token, secret) // 对token解密
-      // 查询数据库中是否有该用户
-      const result = await UserModel.find({
-        username: decoded.username
-      })
-
-      if (result.length > 0) {
-        res.json({
-          error_code: 0,
-          msg: '当前为登录状态',
-          username: decoded.username
-        })
-      } else {
-        res.json({
-          error_code: 401,
-          msg: '登录已失效，请重新登录'
-        })
-      }
-    } catch (error) {
-      res.json({
-        error_code: 401,
-        msg: '登录已失效，请重新登录'
-      })
-    }
-
+  const result = await utils.checkLogin(req)
+  if (result.isAuthenticate) {
+    res.json({
+      error_code: 0,
+      msg: '当前为登录状态2',
+      username: result.username
+    })
   } else {
     res.json({
       error_code: 401,
-      msg: '没有登录'
+      msg: '登录已失效，请重新登录'
     })
   }
 })

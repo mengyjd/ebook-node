@@ -11,7 +11,8 @@ let userSchema = new Schema({
     type: String,
     require: true
   },
-  books: Array
+  shelfList: Array,
+  settings: Object
 })
 
 module.exports = Mongoose.model('user', userSchema)

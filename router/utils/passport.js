@@ -21,10 +21,12 @@ passport.use(new LocalStrategy(async function (username, password, done) {
 
 passport.serializeUser(function (user, done) { //保存user对象
   done(null, user.username); //可以通过数据库方式操作
-});
+})
 
-passport.deserializeUser(function (user, done) { //删除user对象
-  done(null, user.username); //可以通过数据库方式操作
-});
+passport.deserializeUser(function (username, done) { //删除user对象
+  UserModel.findOne(username, function(err, user){
+    done(err, user)
+  })
+})
 
 module.exports = passport
