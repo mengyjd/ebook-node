@@ -3,6 +3,7 @@ const constant = require('../constant')
 const express = require('express');
 const router = express.Router();
 
+// 返回书城首页数据
 router.get('/book/home', (req, res) => {
   const conn = db.connectDB()
   conn.query(
@@ -40,6 +41,7 @@ router.get('/book/home', (req, res) => {
   conn.end()
 })
 
+// 返回详情页的数据
 router.get('/book/detail', (req, res) => {
   const conn = db.connectDB()
   const sql = `select * from book where fileName='${req.query.fileName}'`
@@ -68,6 +70,7 @@ router.get('/book/detail', (req, res) => {
   conn.end()
 })
 
+// 返回list页面数据
 router.get('/book/list', (req, res) => {
   // 判断前端请求的数据类型
   switch (req.query.type) {
@@ -110,6 +113,7 @@ router.get('/book/flat-list', (req, res) => {
   conn.end()
 })
 
+// 返回书架数据
 router.get('/book/shelf', (req, res) => {
   res.json({
     error_code: 0,
@@ -117,6 +121,7 @@ router.get('/book/shelf', (req, res) => {
   })
 })
 
+// 返回热门搜索数据
 router.get('/book/hotSearch', (req, res) => {
   let hotSearchList = []
   const conn = db.connectDB()
@@ -147,6 +152,7 @@ router.get('/book/hotSearch', (req, res) => {
   conn.end()
 })
 
+// 返回书城首页猜你喜欢的数据
 router.get('/book/guessYouLikeList', (req, res) => {
   const conn = db.connectDB()
   conn.query('select * from book', (err, result) => {
