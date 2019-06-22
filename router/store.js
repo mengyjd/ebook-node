@@ -221,7 +221,7 @@ function createGuessYouLike(result, length) {
 
 function createRecommend(result, length) {
   let recommend = []
-  createRandomNumArray(3, 0, length).forEach(key => {
+  createRandomNumArray(10, 0, length).forEach(key => {
     book = createData(result, key)
     book.readers = createRandomNumArray(1, 1000, 10000)[0] + 1000
     recommend.push(book)
@@ -256,7 +256,7 @@ function createCategoryList(result) {
 function createCategoryListItem(categoryId, result) {
   let categoryItem = {}
   let list = []
-  list = result.filter(book => book.category === categoryId).slice(0, 4)
+  list = result.filter(book => book.category === categoryId).slice(0, 10)
   list.map(book => {
     handleData(book)
   })
