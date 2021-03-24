@@ -12,7 +12,7 @@ if (env === 'development') {
   dbUser = 'root'
   dbPassword = '123456'
 } else {
-  resUrl = 'http://120.77.207.213'
+  resUrl = 'http://120.77.207.213/e_r'
   dbHost = '120.77.207.213'
   dbPort = '3306'
   dbUser = 'root'

@@ -14,7 +14,7 @@ module.exports = {
       return constant.dbUser
     },
     get password() {
-      return '123456'
+      return 'xl123456'
     },
     get database() {
       return 'ebook'

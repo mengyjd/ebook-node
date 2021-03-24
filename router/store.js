@@ -143,6 +143,8 @@ router.get('/book/hotSearch', (req, res) => {
         hotSearchList
       })
     } else {
+      console.log('错误', err)
+      console.log('result', result)
       res.json({
         error_code: 1,
         msg: '数据获取失败'
