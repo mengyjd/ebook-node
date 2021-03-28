@@ -5,18 +5,21 @@ let dbHost = ''
 let dbPort = ''
 let dbUser = ''
 let dbPassword = ''
+let database = 'ebook'
 if (env === 'development') {
   resUrl = 'http://localhost:3001'
   dbHost = 'localhost'
   dbPort = '3306'
   dbUser = 'root'
-  dbPassword = '123456'
+  dbPassword = 'xl123456'
+  database = 'ebook'
 } else {
-  resUrl = 'http://120.77.207.213/e_r'
-  dbHost = '120.77.207.213'
+  resUrl = 'http://116.62.199.170/e_r'
+  dbHost = '116.62.199.170'
   dbPort = '3306'
   dbUser = 'root'
-  dbPassword = '123456'
+  dbPassword = 'xl123456'
+  database = 'ebook'
 }
 
 const category = [
@@ -187,5 +190,6 @@ module.exports = {
   dbHost,
   dbPort,
   dbUser,
-  dbPassword
+  dbPassword,
+  database
 }

@@ -14,10 +14,10 @@ module.exports = {
       return constant.dbUser
     },
     get password() {
-      return 'xl123456'
+      return constant.dbPassword
     },
     get database() {
-      return 'ebook'
+      return constant.database
     }
   },
   redis: {
