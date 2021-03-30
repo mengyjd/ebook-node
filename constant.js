@@ -5,21 +5,21 @@ let dbHost = ''
 let dbPort = ''
 let dbUser = ''
 let dbPassword = ''
-let database = 'ebook'
+let database = ''
 if (env === 'development') {
-  resUrl = 'http://localhost:3001'
+  resUrl = 'http://localhost:3001/e_r2'
   dbHost = 'localhost'
   dbPort = '3306'
   dbUser = 'root'
   dbPassword = 'xl123456'
-  database = 'ebook'
+  database = 'reader_book'
 } else {
-  resUrl = 'http://116.62.199.170/e_r'
+  resUrl = 'http://116.62.199.170/e_r2'
   dbHost = '116.62.199.170'
   dbPort = '3306'
   dbUser = 'root'
   dbPassword = 'xl123456'
-  database = 'ebook'
+  database = 'reader_book'
 }
 
 const category = [

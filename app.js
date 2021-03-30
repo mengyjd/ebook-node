@@ -53,7 +53,7 @@ mongoose.connect(dbConfig.ebookMongo, {
 })
 
 
-const server = app.listen(4005, () => {
+const server = app.listen(4006, () => {
   const host = server.address().address
   const port = server.address().port
 
