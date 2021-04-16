@@ -8,7 +8,7 @@ router.get('/book/home', (req, res) => {
   const conn = db.connectDB()
   conn.query(
     'select * from book where cover != \'\'',
-    (err, result) => {
+    async (err, result) => {
       if (!err && result) {
         const length = result.length
         const guessYouLike = createGuessYouLike(result, length)
@@ -17,7 +17,7 @@ router.get('/book/home', (req, res) => {
         const featured = createFeatured(result, length)
         const random = createRandom(result, length)
         const categoryList = createCategoryList(result)
-        const categories = constant.categories
+        const categories = await createCategorys()
 
         res.json({
           error_code: 0,
@@ -44,7 +44,18 @@ router.get('/book/home', (req, res) => {
 // 返回详情页的数据
 router.get('/book/detail', (req, res) => {
   const conn = db.connectDB()
-  const sql = `select * from book where fileName='${req.query.fileName}'`
+  const id = req.query.id
+  const sql = `SELECT 
+                a.id, a.cover, a.title, a.id as fileName,
+                a.category as categoryId, b.category_text as categoryText,
+                a.author, a.publisher, a.rootFile as epub,
+                c.id as publisherId, c.text as publisherText
+              FROM book a
+              LEFT JOIN category b
+              ON a.category = b.category_id
+              LEFT JOIN publisher c
+              ON a.publisher = c.id
+              WHERE a.id = '${id}'`
   conn.query(sql, (err, result) => {
     if (err) {
       res.json({
@@ -135,8 +146,8 @@ router.get('/book/hotSearch', (req, res) => {
         hotSearchItem.text = result[id].title
         hotSearchItem.searchPeopleNum = createRandomNumArray(1, 8000, 20000)[0]
         hotSearchItem.type = 'book'
-        hotSearchItem.fileName = result[id].fileName
-        hotSearchItem.categoryText = result[id].categoryText
+        hotSearchItem.fileName = result[id].id
+        hotSearchItem.id = result[id].id
         hotSearchList.push(hotSearchItem)
       })
       res.json({
@@ -199,17 +210,14 @@ function createData(res, key) {
 
 // 为book对象添加属性
 function handleData(book) {
-  if (!book.cover.startsWith('http://')) {
-    book.cover = `${constant.resUrl}/img${book.cover}`
-    book.selected = false
-    book.private = false
-    book.cache = false
-    book.haveRead = 0
-  }
+  book.selected = false
+  book.private = false
+  book.cache = false
+  book.haveRead = 0
   return book
 }
 
-
+// 创建"猜你喜欢"列表
 function createGuessYouLike(result, length) {
   let guessYouLike = []
   createRandomNumArray(3, 0, length).forEach(key => {
@@ -221,6 +229,7 @@ function createGuessYouLike(result, length) {
   return guessYouLike
 }
 
+// 创建"热门推荐爱"列表
 function createRecommend(result, length) {
   let recommend = []
   createRandomNumArray(10, 0, length).forEach(key => {
@@ -231,6 +240,7 @@ function createRecommend(result, length) {
   return recommend
 }
 
+// 创建"精选"列表
 function createFeatured(result, length) {
   let featured = []
   createRandomNumArray(6, 0, length).forEach(key => {
@@ -246,6 +256,7 @@ function createRandom(result, length) {
   return book
 }
 
+// 创建"分类推荐"列表
 function createCategoryList(result) {
   let categoryList = []
   constant.categoryIds.forEach(id => {
@@ -253,6 +264,27 @@ function createCategoryList(result) {
     categoryList.push(listItem)
   })
   return categoryList
+}
+
+// 创建分类列表
+function createCategorys() {
+  return new Promise((resolve, reject) => {
+    const conn = db.connectDB()
+    const sql = `SELECT a.category as id, b.category_text as text, 
+              count(*) AS counts, a.cover as img1
+              from book a
+              LEFT JOIN category b
+              ON a.category = b.category_id
+              GROUP BY category`
+    conn.query(sql, (error, result) => {
+      if (!error && result) {
+        resolve(result)
+      } else {
+        resolve([])
+      }
+    })
+    conn.end()
+  })
 }
 
 function createCategoryListItem(categoryId, result) {
@@ -275,12 +307,12 @@ function categoryRecommend(req, res) {
       let books = []
       if (req.query.value === 'allHotRecommend') {
         // 如果是查看所有的热门推荐
-        // 则随机随机从数据库中返回30本书
-        books = createBooks(result, 30)
+        // 则随机随机从数据库中返回20本书
+        books = createBooks(result, 20)
       } else if (req.query.value === 'allFeatured') {
         // 如果是查看所有的精选图书
-        // 则随机随机从数据库中返回30本书
-        books = createBooks(result, 30)
+        // 则随机随机从数据库中返回12本书
+        books = createBooks(result, 12)
       }
       res.json({
         books,
@@ -301,7 +333,7 @@ function categoryRecommend(req, res) {
 // 按照分类返回图书
 function categoryBooks(req, res) {
   const conn = db.connectDB()
-  conn.query(`select * from book where categoryText='${req.query.value}'`,
+  conn.query(`select * from book where category='${req.query.value}'`,
     (err, result) => {
       const books = result.map(book => {
         return handleData(book)
@@ -349,7 +381,7 @@ function allCategory(req, res) {
 
 function searchBooksFromKeywords(req, res) {
   const conn = db.connectDB()
-  conn.query(`select * from book where fileName like "%${req.query.value}%";`,
+  conn.query(`select * from book where title like "%${req.query.value}%";`,
     (err, result) => {
       if (!err && result) {
         const books = result.map(book => {
