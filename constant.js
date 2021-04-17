@@ -15,7 +15,7 @@ if (env === 'development') {
   database = 'reader_book'
 } else {
   resUrl = 'http://116.62.199.170/e_r2'
-  dbHost = '116.62.199.170'
+  dbHost = 'localhost'
   dbPort = '3306'
   dbUser = 'root'
   dbPassword = 'xl123456'
