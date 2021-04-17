@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
-    "start": "cross-env NODE_ENV=production pm2 restart app.js --name readerBook"
+    "start": "cross-env NODE_ENV=production pm2 start app.js --name readerBook"
   },
   "author": "梦萦几度",
   "license": "ISC",
